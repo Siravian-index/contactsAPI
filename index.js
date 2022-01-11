@@ -38,4 +38,21 @@ app.get('/api/persons', (req, res) => {
   res.json(data)
 })
 
+app.post('/api/persons', (req, res) => {
+  const id = Math.floor(Math.random() * 9999)
+  const { name, number } = req.body
+  const duplicate = data.find((c) => c.name === name)
+  if (duplicate) {
+    return res.json({ error: 'name must be unique' })
+  }
+  if (!name) {
+    return res.json({ error: 'contacts must contain a name' })
+  }
+  if (!number) {
+    return res.json({ error: 'contacts must contain a number' })
+  }
+  data.push({ id, name, number })
+  return res.json(data)
+})
+
 app.listen(3001)
