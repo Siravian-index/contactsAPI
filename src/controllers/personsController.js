@@ -38,8 +38,9 @@ const createPerson = (req, res) => {
   if (!number) {
     return res.json({ error: 'contacts must contain a number' })
   }
-  data.push({ id, name, number })
-  return res.json(data)
+  const newContact = { id, name, number }
+  data.push(newContact)
+  return res.json(newContact)
 }
 
 export { getPerson, getPersons, deletePerson, createPerson }
