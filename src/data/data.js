@@ -1,4 +1,4 @@
-let data = [
+export const data = [
   {
     id: 1,
     name: 'Arto Hellas',
@@ -20,6 +20,3 @@ let data = [
     number: '39-23-6423122',
   },
 ]
-// exporting this let declared variables seems to make it const.
-// it throws an error if I try to do something like data = data.concat(obj)
-export { data }

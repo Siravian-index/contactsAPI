@@ -1,4 +1,4 @@
-import { data } from '../data/data'
+import { data } from '../data/data.js'
 
 // GET all
 const getPersons = (req, res) => {
@@ -19,7 +19,8 @@ const getPerson = (req, res) => {
 // DELETE one
 const deletePerson = (req, res) => {
   const id = Number(req.params.id)
-  data = data.filter((c) => c.id !== id)
+  const index = data.findIndex((c) => c.id === id)
+  data.splice(index, 1)
   res.status(204).end()
 }
 
@@ -37,7 +38,7 @@ const createPerson = (req, res) => {
   if (!number) {
     return res.json({ error: 'contacts must contain a number' })
   }
-  data = data.concat({ id, name, number })
+  data.push({ id, name, number })
   return res.json(data)
 }
 

@@ -1,6 +1,6 @@
-import { data } from '../data/data'
+import { data } from '../data/data.js'
 
-const getInfo = (req, res) => {
+export const getInfo = (req, res) => {
   const l = data.length
   const d = new Date()
   res.send(`
@@ -8,5 +8,3 @@ const getInfo = (req, res) => {
     <p>${d}</p>
   `)
 }
-
-export { getInfo }

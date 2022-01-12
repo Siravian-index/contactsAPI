@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import * as infoController from '../controllers/infoController'
+import * as infoController from '../controllers/infoController.js'
 
 const infoRouter = Router()
 
