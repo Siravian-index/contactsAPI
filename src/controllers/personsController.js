@@ -25,9 +25,13 @@ const getPerson = async (req, res) => {
 // DELETE one
 const deletePerson = async (req, res) => {
   const { id } = req.params
-  const d = await Contact.deleteOne({ id })
-  console.log(d)
-  res.status(204).end()
+  try {
+    await Contact.findByIdAndDelete(id)
+    res.status(204).end()
+  } catch (err) {
+    console.log(err)
+    res.status(500).end()
+  }
 }
 
 // POST one
