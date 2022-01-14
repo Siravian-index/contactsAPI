@@ -1,34 +1,39 @@
-import { data } from '../data/data.js'
+import Contact from '../models/personsModels.js'
 
 // GET all
-const getPersons = (req, res) => {
-  res.json(data)
+const getPersons = async (req, res) => {
+  const persons = await Contact.find({})
+  res.json(persons)
 }
 
 // GET one
-const getPerson = (req, res) => {
-  const id = Number(req.params.id)
-  const contact = data.find((c) => c.id === id)
-  if (contact) {
-    res.json(contact)
-  } else {
-    res.status(404).end()
+const getPerson = async (req, res) => {
+  const { id } = req.params
+  try {
+    const contact = await Contact.findById(id)
+    if (contact) {
+      res.json(contact)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).end()
   }
 }
 
 // DELETE one
-const deletePerson = (req, res) => {
-  const id = Number(req.params.id)
-  const index = data.findIndex((c) => c.id === id)
-  data.splice(index, 1)
+const deletePerson = async (req, res) => {
+  const { id } = req.params
+  const d = await Contact.deleteOne({ id })
+  console.log(d)
   res.status(204).end()
 }
 
 // POST one
-const createPerson = (req, res) => {
-  const id = Math.floor(Math.random() * 9999)
+const createPerson = async (req, res) => {
   const { name, number } = req.body
-  const duplicate = data.find((c) => c.name === name)
+  const duplicate = await Contact.findOne({ name })
   if (duplicate) {
     return res.json({ error: 'name must be unique' })
   }
@@ -38,8 +43,8 @@ const createPerson = (req, res) => {
   if (!number) {
     return res.json({ error: 'contacts must contain a number' })
   }
-  const newContact = { id, name, number }
-  data.push(newContact)
+  const newContact = new Contact({ name, number })
+  await newContact.save()
   return res.json(newContact)
 }
 
