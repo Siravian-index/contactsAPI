@@ -7,6 +7,6 @@ personsRouter.get('/api/persons/:id', personsController.getPerson)
 personsRouter.get('/api/persons', personsController.getPersons)
 personsRouter.delete('/api/persons/:id', personsController.deletePerson)
 personsRouter.post('/api/persons', personsController.createPerson)
-// missing put
+personsRouter.put('/api/persons/:id', personsController.updatePerson)
 
 export default personsRouter

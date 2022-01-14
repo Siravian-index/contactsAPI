@@ -2,12 +2,16 @@ import Contact from '../models/personsModels.js'
 
 // GET all
 const getPersons = async (req, res) => {
-  const persons = await Contact.find({})
-  res.json(persons)
+  try {
+    const persons = await Contact.find({})
+    res.json(persons)
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // GET one
-const getPerson = async (req, res) => {
+const getPerson = async (req, res, next) => {
   const { id } = req.params
   try {
     const contact = await Contact.findById(id)
@@ -17,8 +21,7 @@ const getPerson = async (req, res) => {
       res.status(404).end()
     }
   } catch (err) {
-    console.log(err)
-    res.status(500).end()
+    next(err)
   }
 }
 
@@ -35,21 +38,38 @@ const deletePerson = async (req, res) => {
 }
 
 // POST one
-const createPerson = async (req, res) => {
+const createPerson = async (req, res, next) => {
   const { name, number } = req.body
-  const duplicate = await Contact.findOne({ name })
-  if (duplicate) {
-    return res.json({ error: 'name must be unique' })
+  try {
+    const duplicate = await Contact.findOne({ name })
+    if (duplicate) {
+      return res.json({ error: 'contact already exist' })
+    }
+    if (!name) {
+      return res.json({ error: 'contacts must contain a name' })
+    }
+    if (!number) {
+      return res.json({ error: 'contacts must contain a number' })
+    }
+    const newContact = new Contact({ name, number })
+    await newContact.save()
+    return res.json(newContact)
+  } catch (err) {
+    console.log(err)
+    next(err)
   }
-  if (!name) {
-    return res.json({ error: 'contacts must contain a name' })
-  }
-  if (!number) {
-    return res.json({ error: 'contacts must contain a number' })
-  }
-  const newContact = new Contact({ name, number })
-  await newContact.save()
-  return res.json(newContact)
 }
 
-export { getPerson, getPersons, deletePerson, createPerson }
+// PUT
+const updatePerson = async (req, res) => {
+  const { id } = req.params
+  const { name, number } = req.body
+  try {
+    const personUpdated = await Contact.findByIdAndUpdate(id, { name, number }, { new: true })
+    res.json(personUpdated)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export { getPerson, getPersons, deletePerson, createPerson, updatePerson }
