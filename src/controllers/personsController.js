@@ -43,32 +43,31 @@ const createPerson = async (req, res, next) => {
   try {
     const duplicate = await Contact.findOne({ name })
     if (duplicate) {
-      return res.json({ error: 'contact already exist' })
+      return res.status(400).json({ error: 'contact already exist' })
     }
     if (!name) {
-      return res.json({ error: 'contacts must contain a name' })
+      return res.status(400).json({ error: 'contacts must contain a name' })
     }
     if (!number) {
-      return res.json({ error: 'contacts must contain a number' })
+      return res.status(400).json({ error: 'contacts must contain a number' })
     }
     const newContact = new Contact({ name, number })
     await newContact.save()
     return res.json(newContact)
   } catch (err) {
-    console.log(err)
     next(err)
   }
 }
 
 // PUT
-const updatePerson = async (req, res) => {
+const updatePerson = async (req, res, next) => {
   const { id } = req.params
   const { name, number } = req.body
   try {
     const personUpdated = await Contact.findByIdAndUpdate(id, { name, number }, { new: true })
     res.json(personUpdated)
   } catch (err) {
-    console.log(err)
+    next(err)
   }
 }
 
